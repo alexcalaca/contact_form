@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Form</title>
+</head>
+<body>
+
+  <h1>Contact Us</h1>
+
+  <form id="contactForm">
+    <p>
+      <label for="name">Name:</label><br>
+      <input type="text" id="name" name="name">
+      <span id="nameError" style="color: red; display: none;">Name is required.</span>
+    </p>
+
+    <p>
+      <label for="email">Email:</label><br>
+      <input type="email" id="email" name="email">
+      <span id="emailError" style="color: red; display: none;">Valid email is required.</span>
+    </p>
+
+    <p>
+      <label for="message">Message:</label><br>
+      <textarea id="message" name="message" rows="5" cols="30"></textarea>
+      <span id="messageError" style="color: red; display: none;">Message is required.</span>
+    </p>
+
+    <p>
+      <button type="submit">Send</button>
+    </p>
+
+    <p id="confirmation" style="color: green; display: none;">Message sent successfully!</p>
+  </form>
+
+  <script>
+    const form = document.getElementById('contactForm');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      // Get fields
+      const name = document.getElementById('name');
+      const email = document.getElementById('email');
+      const message = document.getElementById('message');
+
+      // Error elements
+      const nameError = document.getElementById('nameError');
+      const emailError = document.getElementById('emailError');
+      const messageError = document.getElementById('messageError');
+      const confirmation = document.getElementById('confirmation');
+
+      // Reset messages
+      nameError.style.display = 'none';
+      emailError.style.display = 'none';
+      messageError.style.display = 'none';
+      confirmation.style.display = 'none';
+
+      let isValid = true;
+
+      if (!name.value.trim()) {
+        nameError.style.display = 'inline';
+        isValid = false;
+      }
+
+      if (!email.value.trim() || !email.value.includes('@')) {
+        emailError.style.display = 'inline';
+        isValid = false;
+      }
+
+      if (!message.value.trim()) {
+        messageError.style.display = 'inline';
+        isValid = false;
+      }
+
+      if (isValid) {
+        confirmation.style.display = 'block';
+        console.log("Submitted:", {
+          name: name.value,
+          email: email.value,
+          message: message.value
+        });
+        form.reset();
+      }
+    });
+  </script>
+
+</body>
+</html>
