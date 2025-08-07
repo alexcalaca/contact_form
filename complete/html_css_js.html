@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Contact Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f7f7f7;
+      padding: 2rem;
+    }
+
+    h1 {
+      text-align: center;
+    }
+
+    form {
+      background: white;
+      max-width: 400px;
+      margin: 2rem auto;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
+    label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    input, textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+    }
+
+    input.error, textarea.error {
+      border-color: red;
+      background-color: #ffe5e5;
+    }
+
+    .error-message {
+      color: red;
+      font-size: 0.875rem;
+      display: none;
+    }
+
+    .success-message {
+      color: green;
+      text-align: center;
+      margin-top: 1rem;
+      display: none;
+    }
+
+    button {
+      background: #4CAF50;
+      color: white;
+      border: none;
+      padding: 0.75rem;
+      margin-top: 1rem;
+      border-radius: 4px;
+      width: 100%;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      background: #ccc;
+    }
+
+    .loading {
+      text-align: center;
+      margin-top: 1rem;
+      font-style: italic;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Contact Us</h1>
+
+  <form id="contact-form">
+    <label for="name">Name</label>
+    <input type="text" id="name" name="name" />
+    <div class="error-message" id="name-error">Name is required.</div>
+
+    <label for="email">Email</label>
+    <input type="email" id="email" name="email" />
+    <div class="error-message" id="email-error">Valid email is required.</div>
+
+    <label for="message">Message</label>
+    <textarea id="message" name="message" rows="4"></textarea>
+    <div class="error-message" id="message-error">Message is required.</div>
+
+    <button type="submit">Send</button>
+    <div class="loading" id="loading">Sending...</div>
+    <div class="success-message" id="success">Message sent successfully!</div>
+  </form>
+
+  <script>
+    const form = document.getElementById('contact-form');
+    const loading = document.getElementById('loading');
+    const success = document.getElementById('success');
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      // Clear previous errors
+      const inputs = ['name', 'email', 'message'];
+      let isValid = true;
+
+      inputs.forEach(id => {
+        const input = document.getElementById(id);
+        const error = document.getElementById(`${id}-error`);
+        input.classList.remove('error');
+        error.style.display = 'none';
+
+        if (!input.value.trim()) {
+          input.classList.add('error');
+          error.style.display = 'block';
+          isValid = false;
+        }
+      });
+
+      if (!isValid) return;
+
+      // Show loading
+      loading.style.display = 'block';
+      success.style.display = 'none';
+      form.querySelector('button').disabled = true;
+
+      // Simulate sending
+      setTimeout(() => {
+        loading.style.display = 'none';
+        success.style.display = 'block';
+        form.querySelector('button').disabled = false;
+
+        const formData = {
+          name: form.name.value,
+          email: form.email.value,
+          message: form.message.value
+        };
+        console.log('Submitted:', formData);
+
+        form.reset();
+      }, 2000);
+    });
+  </script>
+
+</body>
+</html>
