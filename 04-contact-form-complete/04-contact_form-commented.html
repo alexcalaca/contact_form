@@ -1,0 +1,182 @@
+<!DOCTYPE html> <!-- Declares HTML5 document type for proper browser rendering -->
+<html lang="en"> <!-- Root element; lang helps accessibility and SEO -->
+<head> <!-- Document metadata (not rendered in page body) -->
+  <meta charset="UTF-8" /> <!-- Character encoding to support most characters -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/> <!-- Responsive scaling on mobile -->
+  <title>Contact Form</title> <!-- Browser tab title -->
+
+  <style>
+    /* ---- Base Page Styles ---- */
+    body {
+      font-family: Arial, sans-serif; /* Sets default font */
+      background: #f7f7f7;            /* Light gray page background */
+      padding: 2rem;                   /* Space around the page content */
+    }
+
+    h1 {
+      text-align: center;              /* Centers the main heading */
+    }
+
+    /* ---- Form Container ---- */
+    form {
+      background: white;               /* White form card */
+      max-width: 400px;                /* Limits width for readability */
+      margin: 2rem auto;               /* Centers form horizontally with top/bottom space */
+      padding: 2rem;                   /* Inner spacing inside form */
+      border-radius: 8px;              /* Rounded corners */
+      box-shadow: 0 0 10px rgba(0,0,0,0.1); /* Soft shadow for elevation */
+    }
+
+    /* ---- Labels ---- */
+    label {
+      display: block;                  /* Puts label on its own line */
+      margin-top: 1rem;                /* Space above label */
+      font-weight: bold;               /* Emphasis on label text */
+    }
+
+    /* ---- Inputs & Textarea ---- */
+    input, textarea {
+      width: 100%;                     /* Full-width controls */
+      padding: 0.5rem;                 /* Inner padding */
+      margin-top: 0.5rem;              /* Space between label and control */
+      border: 1px solid #ccc;          /* Subtle border */
+      border-radius: 4px;              /* Rounded corners */
+      font-size: 1rem;                 /* Readable text size */
+    }
+
+    /* ---- Error State Styling ---- */
+    input.error, textarea.error {
+      border-color: red;               /* Red border when invalid */
+      background-color: #ffe5e5;       /* Light red background for visibility */
+    }
+
+    /* ---- Inline Error Messages ---- */
+    .error-message {
+      color: red;                      /* Red text for errors */
+      font-size: 0.875rem;             /* Slightly smaller than body text */
+      display: none;                   /* Hidden by default, shown on validation fail */
+    }
+
+    /* ---- Success Message ---- */
+    .success-message {
+      color: green;                    /* Green indicates success */
+      text-align: center;              /* Centered below the button */
+      margin-top: 1rem;                /* Space above message */
+      display: none;                   /* Hidden until submission succeeds */
+    }
+
+    /* ---- Submit Button ---- */
+    button {
+      background: #4CAF50;             /* Green button background */
+      color: white;                    /* White text */
+      border: none;                    /* No default border */
+      padding: 0.75rem;                /* Clickable area */
+      margin-top: 1rem;                /* Space above button */
+      border-radius: 4px;              /* Rounded corners */
+      width: 100%;                     /* Full-width button */
+      font-size: 1rem;                 /* Readable text */
+      cursor: pointer;                 /* Pointer cursor on hover */
+    }
+
+    button:disabled {
+      background: #ccc;                /* Gray out when disabled */
+    }
+
+    /* ---- Loading Text ---- */
+    .loading {
+      text-align: center;              /* Centered “Sending...” text */
+      margin-top: 1rem;                /* Space above */
+      font-style: italic;              /* Visual distinction */
+      display: none;                   /* Hidden until sending starts */
+    }
+  </style>
+</head>
+<body> <!-- Visible page content starts here -->
+
+  <h1>Contact Us</h1> <!-- Page heading -->
+
+  <!-- The contact form element; id used to target via JS -->
+  <form id="contact-form">
+    <!-- Name field -->
+    <label for="name">Name</label> <!-- Accessible label tied to input by 'for' -->
+    <input type="text" id="name" name="name" /> <!-- Text input for user’s name -->
+    <div class="error-message" id="name-error">Name is required.</div> <!-- Inline error for name -->
+
+    <!-- Email field -->
+    <label for="email">Email</label> <!-- Label for email input -->
+    <input type="email" id="email" name="email" /> <!-- HTML5 email input (basic browser validation) -->
+    <div class="error-message" id="email-error">Valid email is required.</div> <!-- Inline error for email -->
+
+    <!-- Message field -->
+    <label for="message">Message</label> <!-- Label for message textarea -->
+    <textarea id="message" name="message" rows="4"></textarea> <!-- Multiline text area -->
+    <div class="error-message" id="message-error">Message is required.</div> <!-- Inline error for message -->
+
+    <!-- Submit button and feedback areas -->
+    <button type="submit">Send</button> <!-- Triggers form submission -->
+    <div class="loading" id="loading">Sending...</div> <!-- Shows while “sending” -->
+    <div class="success-message" id="success">Message sent successfully!</div> <!-- Shows on success -->
+  </form>
+
+  <script>
+    // Cache key DOM nodes for reuse
+    const form = document.getElementById('contact-form'); // Reference to the form
+    const loading = document.getElementById('loading');   // “Sending...” element
+    const success = document.getElementById('success');   // Success message element
+
+    // Attach a submit handler to the form
+    form.addEventListener('submit', function (e) {
+      e.preventDefault(); // Prevents the default browser submit & page reload
+
+      // ---- Client-side validation block ----
+      // Fields we want to validate (by element IDs)
+      const inputs = ['name', 'email', 'message'];
+      let isValid = true; // Assume valid until a field fails
+
+      inputs.forEach(id => {
+        const input = document.getElementById(id);          // The input/textarea
+        const error = document.getElementById(`${id}-error`); // Matching error message
+
+        // Reset previous validation state
+        input.classList.remove('error'); // Remove red highlight if present
+        error.style.display = 'none';    // Hide error text
+
+        // Trimmed empty check; if empty, mark invalid and show error
+        if (!input.value.trim()) {
+          input.classList.add('error');  // Add red highlight
+          error.style.display = 'block'; // Reveal the inline error
+          isValid = false;               // Flag the form as invalid
+        }
+      });
+
+      // If any field invalid, stop here (don’t “submit”)
+      if (!isValid) return;
+
+      // ---- Simulated submit flow ----
+      // Show loading indicator; hide success; disable button to prevent double submit
+      loading.style.display = 'block';
+      success.style.display = 'none';
+      form.querySelector('button').disabled = true;
+
+      // Simulate a network request with setTimeout (2 seconds)
+      setTimeout(() => {
+        // Hide loading; show success; re-enable the button
+        loading.style.display = 'none';
+        success.style.display = 'block';
+        form.querySelector('button').disabled = false;
+
+        // Collect data (what would be sent to a server)
+        const formData = {
+          name: form.name.value,
+          email: form.email.value,
+          message: form.message.value
+        };
+        console.log('Submitted:', formData); // Dev feedback in console
+
+        form.reset(); // Clear the form fields after “sending”
+      }, 2000);
+    });
+  </script>
+
+</body>
+</html>
