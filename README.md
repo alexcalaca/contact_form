@@ -44,7 +44,11 @@ It is designed as a learning resource to show the progressive enhancement of a s
   - Full styling and layout customization.  
   - Client-side validation with clear error messages.  
   - A “fake” loading animation to simulate form submission.  
-  - Responsive and accessible design principles applied.  
+  - Responsive and accessible design principles applied.
+ 
+**Files inside this folder:**  
+- `contact-form.html` → The clean, final version of the form.  
+- `contact-form-commented.html` → The same form with detailed line-by-line comments explaining each part of the HTML, CSS, and JavaScript.  
 
 ---
 
